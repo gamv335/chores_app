@@ -1,30 +1,18 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text, Button, FlatList, TextInput } from 'react-native';  // TextInput added here
-import { registerRootComponent } from 'expo';  
-import { NativeStackScreenProps } from '@react-navigation/native-stack';  
+import { View, Text, Button, FlatList } from 'react-native';
+import { registerRootComponent } from 'expo';  // Import from Expo to register the main component
 import { useState } from 'react';
 
 // Define the type for the navigation stack
 export type RootStackParamList = {
   Home: undefined;
-  AddChore: { addChore: (chore: Chore) => void };  // Now AddChore expects the addChore function
+  AddChore: undefined;
 };
 
 // Create a Stack navigator
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-// Define props for HomeScreen and AddChoreScreen using NativeStackScreenProps
-type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
-type AddChoreScreenProps = NativeStackScreenProps<RootStackParamList, 'AddChore'>;
 
 type Chore = {
   title: string;
@@ -32,7 +20,7 @@ type Chore = {
 };
 
 // HomeScreen to display the list of chores
-function HomeScreen({ navigation }: HomeScreenProps) {
+function HomeScreen({ navigation }: any) {
   const [chores, setChores] = useState<Chore[]>([
     { title: 'Do the dishes' },
     { title: 'Sweep the floor' },
@@ -63,21 +51,24 @@ function HomeScreen({ navigation }: HomeScreenProps) {
       {/* Button to navigate to a screen for adding new chores */}
       <Button
         title="Add New Chore"
-        onPress={() => navigation.navigate('AddChore', { addChore })}  
+        onPress={() => navigation.navigate('AddChore', { addChore })}
       />
     </View>
   );
 }
 
 // AddChoreScreen to submit a new chore
-function AddChoreScreen({ navigation, route }: AddChoreScreenProps) {
+function AddChoreScreen({ navigation, route }: any) {
   const [choreTitle, setChoreTitle] = useState('');
   const [choreDescription, setChoreDescription] = useState('');
 
+  // Safely access route.params with a type guard
+  const addChore = route.params?.addChore || (() => {});
+
   const handleSubmit = () => {
     if (choreTitle.trim() !== '') {
-      route.params.addChore({ title: choreTitle, description: choreDescription });
-      navigation.goBack();  
+      addChore({ title: choreTitle, description: choreDescription });
+      navigation.goBack(); // Return to the home screen
     }
   };
 
@@ -114,6 +105,6 @@ function App() {
 }
 
 // Register the main component (App) with Expo
-registerRootComponent(App);  
+registerRootComponent(App);  // This is required in Expo to make sure the App component is properly registered
 
 export default App;

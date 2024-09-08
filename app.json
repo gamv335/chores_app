@@ -1,4 +1,13 @@
 {
-  "name": "chores_app",
-  "displayName": "chores_app"
+  "expo": {
+    "name": "HouseholdChoresApp",
+    "slug": "household-chores-app",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "entryPoint": "./index.js" 
+  }
 }
