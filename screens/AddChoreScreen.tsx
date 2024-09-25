@@ -2,17 +2,22 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from './App'; // Import your RootStackParamList type
+import { RootStackParamList } from '../App'; // Import your RootStackParamList type
+import { useChores } from '../context/ChoreContext';  // Import the useChores hook
 
 // Define props for AddChoreScreen using NativeStackScreenProps
 type AddChoreScreenProps = NativeStackScreenProps<RootStackParamList, 'AddChore'>;
 
-const AddChoreScreen = ({ navigation, route }: AddChoreScreenProps) => {
+function AddChoreScreen ({ navigation }: AddChoreScreenProps) {
   const [choreTitle, setChoreTitle] = useState('');
   const [choreDescription, setChoreDescription] = useState('');
+  const { addChore } = useChores();  // Retrieve addChore from context
+
+  // Retrieve addChore from the navigation options
+  //const addChore = navigation.getState().routes.find(route => route.name === 'HomeScreen')?.params?.addChore;
 
   // Safely access route.params with a type guard
-  const addChore = route.params?.addChore || (() => {});
+  //const addChore = route.params?.addChore || (() => {});
 
   const handleSubmit = () => {
     if (choreTitle.trim() !== '') {
