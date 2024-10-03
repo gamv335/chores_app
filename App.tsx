@@ -41,18 +41,18 @@ export type Chore = {
 
 // HomeScreen to display the list of chores
 function HomeScreen({ navigation }: HomeScreenProps) {
-  const { chores } = useChores();  // Retrieve chores from context
+  const { chores, setChores } = useChores();   // Retrieve chores from context
 
   const addChore = (chore: Chore) => {
     setChores([...chores, chore]);
   };
 
   // useEffect or useLayoutEffect to set the addChore function
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      addChore, // Pass the addChore function using navigation.setOptions
-    });
-  }, [navigation, addChore]);
+  //useLayoutEffect(() => {
+  //  navigation.setOptions({
+  //    addChore, // Pass the addChore function using navigation.setOptions
+  //  });
+  //}, [navigation, addChore]);
 
   const renderItem = ({ item }: { item: Chore }) => (
     <View style={{ padding: 10 }}>
@@ -75,7 +75,7 @@ function HomeScreen({ navigation }: HomeScreenProps) {
       {/* Button to navigate to a screen for adding new chores */}
       <Button
         title="Add New Chore"
-        onPress={() => navigation.navigate('AddChore', { addChore })}  
+        onPress={() => navigation.navigate('AddChore')}  
       />
     </View>
   );

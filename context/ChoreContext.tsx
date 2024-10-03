@@ -10,6 +10,7 @@ export type Chore = {
 type ChoreContextType = {
   chores: Chore[];
   addChore: (chore: Chore) => void;
+  setChores: React.Dispatch<React.SetStateAction<Chore[]>>;  // Add setChores here
 };
 
 // Create the context
@@ -26,7 +27,7 @@ export const ChoreProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ChoreContext.Provider value={{ chores, addChore }}>
+    <ChoreContext.Provider value={{ chores, addChore, setChores }}>
       {children}
     </ChoreContext.Provider>
   );
