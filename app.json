@@ -8,6 +8,6 @@
       "android",
       "web"
     ],
-    "entryPoint": "./index.js" 
+    "entryPoint": "./screens/LoginScreen.tsx" 
   }
 }

@@ -6,41 +6,53 @@
  */
 
 import * as React from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text, Button, FlatList, TextInput } from 'react-native';  // TextInput added here
 import { registerRootComponent } from 'expo';  
 import { NativeStackScreenProps } from '@react-navigation/native-stack';  
-import { useState } from 'react';
+import { AuthProvider } from './context/AuthContext'; 
+import AddChoreScreen from './screens/AddChoreScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import LoginScreen from './screens/LoginScreen';
+import { ChoreProvider } from './context/ChoreContext';  // Import the ChoreProvider
+import { useChores } from './context/ChoreContext';  // Import the useChores hook
 
 // Define the type for the navigation stack
 export type RootStackParamList = {
-  Home: undefined;
-  AddChore: { addChore: (chore: Chore) => void };  // Now AddChore expects the addChore function
+  HomeScreen: undefined;
+  AddChore: undefined;  // Now AddChore expects the addChore function
+  RegisterScreen: undefined;
+  LoginScreen: undefined;
 };
 
 // Create a Stack navigator
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 // Define props for HomeScreen and AddChoreScreen using NativeStackScreenProps
-type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'HomeScreen'>;
 type AddChoreScreenProps = NativeStackScreenProps<RootStackParamList, 'AddChore'>;
 
-type Chore = {
+export type Chore = {
   title: string;
   description?: string;
 };
 
 // HomeScreen to display the list of chores
 function HomeScreen({ navigation }: HomeScreenProps) {
-  const [chores, setChores] = useState<Chore[]>([
-    { title: 'Do the dishes' },
-    { title: 'Sweep the floor' },
-  ]);
+  const { chores, setChores } = useChores();   // Retrieve chores from context
 
   const addChore = (chore: Chore) => {
     setChores([...chores, chore]);
   };
+
+  // useEffect or useLayoutEffect to set the addChore function
+  //useLayoutEffect(() => {
+  //  navigation.setOptions({
+  //    addChore, // Pass the addChore function using navigation.setOptions
+  //  });
+  //}, [navigation, addChore]);
 
   const renderItem = ({ item }: { item: Chore }) => (
     <View style={{ padding: 10 }}>
@@ -63,57 +75,29 @@ function HomeScreen({ navigation }: HomeScreenProps) {
       {/* Button to navigate to a screen for adding new chores */}
       <Button
         title="Add New Chore"
-        onPress={() => navigation.navigate('AddChore', { addChore })}  
+        onPress={() => navigation.navigate('AddChore')}  
       />
-    </View>
-  );
-}
-
-// AddChoreScreen to submit a new chore
-function AddChoreScreen({ navigation, route }: AddChoreScreenProps) {
-  const [choreTitle, setChoreTitle] = useState('');
-  const [choreDescription, setChoreDescription] = useState('');
-
-  const handleSubmit = () => {
-    if (choreTitle.trim() !== '') {
-      route.params.addChore({ title: choreTitle, description: choreDescription });
-      navigation.goBack();  
-    }
-  };
-
-  return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>Add New Chore</Text>
-      <TextInput
-        style={{ borderWidth: 1, padding: 10, marginBottom: 20 }}
-        placeholder="Enter chore title"
-        value={choreTitle}
-        onChangeText={setChoreTitle}
-      />
-      <TextInput
-        style={{ borderWidth: 1, padding: 10, marginBottom: 20 }}
-        placeholder="Enter description (optional)"
-        value={choreDescription}
-        onChangeText={setChoreDescription}
-      />
-      <Button title="Submit Chore" onPress={handleSubmit} />
     </View>
   );
 }
 
 // Main App component
-function App() {
+export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="AddChore" component={AddChoreScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ChoreProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="LoginScreen">
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="AddChore" component={AddChoreScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
+    </ChoreProvider>
   );
 }
 
 // Register the main component (App) with Expo
 registerRootComponent(App);  
-
-export default App;
