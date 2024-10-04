@@ -5,6 +5,8 @@ import { createContext, useState, ReactNode, useContext } from 'react';
 export type Chore = {
   title: string;
   description?: string;
+  deadlineDate?: string; // Add the deadline date
+  deadlineTime?: string; // Add the deadline time
 };
 
 type ChoreContextType = {

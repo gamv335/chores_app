@@ -17,7 +17,7 @@ import AddChoreScreen from './screens/AddChoreScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import LoginScreen from './screens/LoginScreen';
 import { ChoreProvider } from './context/ChoreContext';  // Import the ChoreProvider
-import { useChores } from './context/ChoreContext';  // Import the useChores hook
+import { Chore, useChores } from './context/ChoreContext';  // Import the useChores hook
 
 // Define the type for the navigation stack
 export type RootStackParamList = {
@@ -33,11 +33,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 // Define props for HomeScreen and AddChoreScreen using NativeStackScreenProps
 type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'HomeScreen'>;
 type AddChoreScreenProps = NativeStackScreenProps<RootStackParamList, 'AddChore'>;
-
-export type Chore = {
-  title: string;
-  description?: string;
-};
 
 // HomeScreen to display the list of chores
 function HomeScreen({ navigation }: HomeScreenProps) {
@@ -58,6 +53,9 @@ function HomeScreen({ navigation }: HomeScreenProps) {
     <View style={{ padding: 10 }}>
       <Text style={{ fontSize: 18 }}>{item.title}</Text>
       {item.description ? <Text>{item.description}</Text> : null}
+      {item.deadlineDate && item.deadlineTime ? (
+        <Text>Deadline: {item.deadlineDate} at {item.deadlineTime}</Text>
+      ) : null}
     </View>
   );
 
