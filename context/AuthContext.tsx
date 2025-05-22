@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Login function
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('http://192.168.0.33:5001/api/users/login', { email, password });
+      const res = await axios.post('http://192.XXX.X.XX:XXXX/api/users/login', { email, password });
       console.log('Login request sent'); // Log for debugging
       const token = res.data.token;
       await AsyncStorage.setItem('token', token);
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Register function
   const register = async (name: string, email: string, password: string) => {
     try {
-      const res = await axios.post('http://localhost:5001/api/users/register', { name, email, password });
+      const res = await axios.post('http://localhost:XXXX/api/users/register', { name, email, password });
       console.log('Response from login API:', res.data); // Debugging log
       const token = res.data.token;
       await AsyncStorage.setItem('token', token);
